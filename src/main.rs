@@ -1,3 +1,7 @@
+mod inputs;
+use inputs::Args;
+
 fn main() {
-    println!("Hello, world!");
+    let args = Args::new();
+    println!("{}", args.command());
 }
