@@ -3,5 +3,5 @@ use inputs::Args;
 
 fn main() {
     let args = Args::new();
-    println!("{}", args.command());
+    Args::parse_commands(&args);
 }
