@@ -37,8 +37,12 @@ impl Commands {
             .expect("failed to execute process")
     }
 
-    pub fn build(&self) -> Option<bool> {
-        self.build
+    pub fn build(&self) {
+        // build the dependencies
+        Command::new("cargo")
+            .arg("build")
+            .output()
+            .expect("failed to execute process");
     }
 
     pub fn url(&self) -> Option<String> {
