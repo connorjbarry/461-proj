@@ -32,12 +32,16 @@ impl Commands {
             .arg("add")
             .arg("clap")
             .arg("--features")
-            .arg("derive")
+            .arg("clap/derive")
+            .arg("reqwest")
+            .arg("serde")
+            .arg("serde_json")
+            .arg("serde_derive")
             .spawn()
             .expect("failed to execute process")
     }
 
-    pub fn build(&self) -> Option<bool> {
+    pub fn build(&self) -> Option<bool> { //cargo build
         self.build
     }
 
@@ -45,7 +49,10 @@ impl Commands {
         self.url.clone()
     }
 
-    pub fn test(&self) -> Option<bool> {
+    pub fn test(&self) -> Option<bool> { //cargo test
         self.test
+    }
+    pub fn invalidCommand(&self) -> Option<bool> {
+        None
     }
 }
