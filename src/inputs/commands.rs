@@ -28,9 +28,11 @@ impl Commands {
 
         // println!("here {} ", output.status);
         // output.stdout
-        Command::new("ls")
-            .arg("-a")
-            .arg("-l")
+        Command::new("cargo")
+            .arg("add")
+            .arg("clap")
+            .arg("--features")
+            .arg("derive")
             .spawn()
             .expect("failed to execute process")
     }
