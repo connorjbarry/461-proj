@@ -13,7 +13,7 @@ use commands::Commands;
 pub struct Args {
     /// The command to execute
     #[arg(short, long)]
-    command: String,
+    pub command: String,
 }
 
 impl Args {
