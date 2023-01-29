@@ -1,5 +1,5 @@
 use clap::Parser;
-mod commands;
+pub mod commands;
 use commands::Commands;
 
 #[derive(Parser, Debug)]

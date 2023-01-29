@@ -1,4 +1,4 @@
-use std::process::{Command, Output};
+use std::process::{Command, Output, Child};
 
 pub struct Commands {
     pub install: Option<bool>,
@@ -17,14 +17,20 @@ impl Commands {
         }
     }
 
-    pub fn install(&self) -> Vec<u8> {
-        let output: Output = Command::new("ls")
-            .args(["-l", "-a"])
-            .output()
-            .expect("failed to execute process");
+    pub fn install(&self) -> Child {
+        // let output: Output = Command::new("ls")
+        //     .arg("-a")
+        //     .arg("-l")
+        //     .spawn()
+        //     .expect("failed to execute process");
 
-        println!("here {} ", output.status);
-        output.stdout
+        // println!("here {} ", output.status);
+        // output.stdout
+        Command::new("ls")
+            .arg("-a")
+            .arg("-l")
+            .spawn()
+            .expect("failed to execute process")
     }
 
     pub fn build(&self) -> Option<bool> {
