@@ -49,7 +49,10 @@ impl Commands {
         self.url.clone()
     }
 
-    pub fn test(&self) -> Option<bool> {
-        self.test
+    pub fn test(&self) {
+        Command::new("cargo")
+            .arg("test")
+            .spawn()
+            .expect("failed to test");
     }
 }
