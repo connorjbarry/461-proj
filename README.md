@@ -6,4 +6,4 @@ Team Members:\
 Yi-Hsiang(Sean) Chang\
 Connor Barry\
 Erik Hays\
-Seth Karner\
+Seth Karner
