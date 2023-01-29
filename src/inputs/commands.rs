@@ -37,15 +37,22 @@ impl Commands {
             .expect("failed to execute process")
     }
 
-    pub fn build(&self) -> Option<bool> {
-        self.build
+    pub fn build(&self) {
+        // build 
+        Command::new("cargo")
+            .arg("build")
+            .spawn()
+            .expect("failed to build")
     }
 
     pub fn url(&self) -> Option<String> {
         self.url.clone()
     }
 
-    pub fn test(&self) -> Option<bool> {
-        self.test
+    pub fn test(&self) {
+        Command::new("cargo")
+            .arg("test")
+            .spawn()
+            .expect("failed to test");
     }
 }
