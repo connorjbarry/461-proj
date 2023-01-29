@@ -1,4 +1,6 @@
 use std::process::{Command, Output, Child};
+mod metrics;
+use metrics::Metrics;
 
 pub struct Commands {
     pub install: Option<bool>,
