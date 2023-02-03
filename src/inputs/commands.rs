@@ -1,4 +1,4 @@
-use std::process::{Command, Output, Child};
+use std::process::{Command, Child};
 mod metrics;
 use metrics::Metrics;
 
@@ -20,7 +20,7 @@ use metrics::Metrics;
 pub struct Commands {
     pub install: Option<bool>,
     pub build: Option<bool>,
-    pub url: Option<String>,
+    pub urls: Option<Vec<String>>,
     pub test: Option<bool>,
 }
 
@@ -40,7 +40,7 @@ impl Commands {
         Commands {
             install: None,
             build: None,
-            url: None,
+            urls: None,
             test: None,
         }
     }
@@ -67,8 +67,9 @@ impl Commands {
             .arg("serde")
             .arg("serde_json")
             .arg("serde_derive")
+            .arg("regex")
             .spawn()
-            .expect("failed to execute process")
+            .expect("failed to execute install process")
     }
 
     /* 
@@ -83,17 +84,17 @@ impl Commands {
             command.build();
     */
 
-    pub fn build(&self) {
+    pub fn build(&self) -> Child {
         // build 
         Command::new("cargo")
             .arg("build")
             .spawn()
-            .expect("failed to build")
+            .expect("failed to execute build process")
     }
 
-    pub fn url(&self) -> Option<String> {
-        self.url.clone()
-    }
+    // pub fn fileName(&self) {
+
+    // }
 
 
     /* 
@@ -109,11 +110,32 @@ impl Commands {
     */
 
 
-    pub fn test(&self) {
+    pub fn test(&self) -> Child {
         Command::new("cargo")
             .arg("test")
             .spawn()
-            .expect("failed to test");
+            .expect("failed to execute test process")
 
     }
+
+    /* 
+        Function: grade
+        Arguments: None
+        Return: None
+
+        Description: This function grades the module and returns the grade to the user
+
+        Example: 
+            let command = Commands::new();
+            command.grade();
+    */
+
+    pub fn grade(&self) {
+        let metrics = Metrics::new();
+        // loop through the urls and grade each one
+        for url in self.urls.as_ref().unwrap() {
+            metrics.get_metrics(url);
+        }
+    }
 }
+
