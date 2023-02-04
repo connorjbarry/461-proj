@@ -132,9 +132,14 @@ impl Commands {
 
     pub fn grade(&self) {
         let metrics = Metrics::new();
-        // loop through the urls and grade each one
+        println!("");
+        println!("   Module Name | Ramp Up Time | Correctness | Bus Factor | Responsiveness | License Compatability | Total Score");
+        println!("   ------------|--------------|-------------|------------|----------------|-----------------------|------------");
         for url in self.urls.as_ref().unwrap() {
             metrics.get_metrics(url);
+            if url != self.urls.as_ref().unwrap().last().unwrap() {
+                println!("   ------------|--------------|-------------|------------|----------------|-----------------------|------------");
+            }
         }
     }
 }
