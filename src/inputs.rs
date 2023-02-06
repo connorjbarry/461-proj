@@ -69,7 +69,6 @@ impl Args {
             },  
             _ => {
                 self.get_file_urls();
-                // command.grade();
             },
         }
     }
@@ -92,6 +91,7 @@ impl Args {
         let path = self.command.as_str();
         let contents = fs::read_to_string(path).expect("Something went wrong reading the file");
         let mut urls: Vec<String> = contents.split_whitespace().map(|s| s.to_string()).collect();
+        let mut original_urls: Vec<String> = urls.clone();
         let mut temp_urls: Vec<String> = Vec::new();
         let re = Regex::new(r"https://(github.com|www.npmjs.com)/[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+").unwrap();
 
@@ -116,7 +116,7 @@ impl Args {
 
         let mut command = Commands::new();
         command.urls = Some(urls);
-        command.grade();
+        command.grade(original_urls);
     }
 
 }

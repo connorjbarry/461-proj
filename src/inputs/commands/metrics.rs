@@ -1,10 +1,10 @@
 pub struct Metrics {
-    ramp_up:f64,
-    correctness:f64,
-    bus_factor:f64,
-    responsiveness:f64,
-    license:f64,
-    total:f64,
+    pub ramp_up:f64,
+    pub correctness:f64,
+    pub bus_factor:f64,
+    pub responsiveness:f64,
+    pub license:f64,
+    pub total:f64,
 }
 
 impl Metrics {
@@ -32,13 +32,13 @@ impl Metrics {
             metrics.get_ramp_up();
     */
 
-    pub fn get_ramp_up(&self, moudule_url: &str) /* -> f64 */ {
-        println!("ramp up")
+    pub fn get_ramp_up(&mut self, module_url: &str) /* -> f64 */ {
+        self.ramp_up = 0.5;
     }
 
     /* 
         Function: get_correctness
-        Arguments: moudule_url - the name of the module the metric is graded for
+        Arguments: module_url - the name of the module the metric is graded for
         Return: f64 - between 0 and 1
 
         Description: This function runs a script and returns the correctness metric
@@ -49,14 +49,14 @@ impl Metrics {
             metrics.get_correctness();
     */
 
-    pub fn get_correctness(&self,  moudule_url: &str) /* -> f64 */ {
-        println!("correctness")
+    pub fn get_correctness(&mut self,  module_url: &str) /* -> f64 */ {
+        self.correctness = 0.6;
     }
 
 
     /* 
         Function: get_bus_factor
-        Arguments: moudule_url - the name of the module the metric is graded for
+        Arguments: module_url - the name of the module the metric is graded for
         Return: f64 - between 0 and 1
 
         Description: This function runs a script and returns the bus factor metric
@@ -67,14 +67,14 @@ impl Metrics {
             metrics.get_bus_factor();
     */
 
-    pub fn get_bus_factor(&self,  moudule_url: &str) /* -> f64 */ {
-        println!("bus factor")
+    pub fn get_bus_factor(&mut self,  module_url: &str) /* -> f64 */ {
+        self.bus_factor = 0.3;
     }
 
 
     /* 
         Function: get_responsiveness
-        Arguments: moudule_url - the name of the module the metric is graded for
+        Arguments: module_url - the name of the module the metric is graded for
         Return: f64 - between 0 and 1
 
         Description: This function runs a script and returns the responsiveness metric
@@ -85,14 +85,14 @@ impl Metrics {
             metrics.get_responsiveness();
     */
 
-    pub fn get_responsiveness(&self,  moudule_url: &str) /* -> f64 */ {
-        println!("responsiveness")
+    pub fn get_responsiveness(&mut self,  module_url: &str) /* -> f64 */ {
+        self.responsiveness = 0.7;
     }
 
 
     /* 
         Function: get_license
-        Arguments: moudule_url - the name of the module the metric is graded for
+        Arguments: module_url - the name of the module the metric is graded for
         Return: f64 - between 0 and 1
 
         Description: This function runs a script and returns the license metric
@@ -104,14 +104,14 @@ impl Metrics {
     */
 
 
-    pub fn get_license(&self,  moudule_url: &str) /* -> f64 */ {
-        println!("license")
+    pub fn get_license(&mut self,  module_url: &str) /* -> f64 */ {
+        self.license =  1.0;
     }
 
 
     /* 
         Function: get_total
-        Arguments: moudule_url - the name of the module the metric is graded for
+        Arguments: module_url - the name of the module the metric is graded for
         Return: f64 - between 0 and 1
 
         Description: This function runs an algorithm considering all the metrics calculated above and returns the total grade
@@ -121,13 +121,18 @@ impl Metrics {
             metrics.get_total();
     */
 
-    pub fn get_total(&self,  moudule_url: &str) /* -> f64 */ {
-        println!("total")
+    pub fn get_total(&mut self,  module_url: &str) /* -> f64 */ {
+        self.get_ramp_up(module_url);
+        self.get_correctness(module_url);
+        self.get_bus_factor(module_url);
+        self.get_responsiveness(module_url);
+        self.get_license(module_url);
+        self.total = (self.ramp_up + self.correctness + self.bus_factor + self.responsiveness + self.license) / 5.0;
     }  
 
     /* 
         Function: get_metrics
-        Arguments: moudule_url - the name of the module the metric is graded for
+        Arguments: module_url - the name of the module the metric is graded for
         Return: None
 
         Description: This function runs all the scripts and prints the metrics for the module in a tabular format
@@ -137,11 +142,10 @@ impl Metrics {
             metrics.get_metrics();
     */
 
-    pub fn get_metrics(&self, moudule_url: &str) {
-        let url_vec: Vec<&str> = moudule_url.split("/").collect();
-        let module_name = url_vec[url_vec.len() - 1];
-        println!("{name:>14} | {rut:>12} | {cor:>11} | {bf:>10} | {resp:>14} | {lc:>21} | {tot:>11}", 
-        name=module_name, rut=self.ramp_up, cor=self.correctness, bf=self.bus_factor, resp=self.responsiveness, lc=self.license, tot=self.total
+    pub fn get_metrics(&mut self, module_url: &str) {
+        self.get_total(module_url);
+        println!("{{\"URL\": \"{}\", \"NET_SCORE\": {}, \"RAMP_UP_SCORE\": {}, \"CORRECTNESS_SCORE\": {}, \"BUS_FACTOR_SCORE\": {}, \"RESPONSIVE_MAINTAINER_SCORE\": {}, \"LICENSE_SCORE\": {}}}",
+        module_url, self.total, self.ramp_up, self.correctness, self.bus_factor, self.responsiveness, self.license
         );
     }
 }
