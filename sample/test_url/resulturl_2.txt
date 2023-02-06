@@ -1,0 +1,8 @@
+https://api.github.com/repos/vercel/next.js
+https://api.github.com/repos/ethereumbook/ethereumbook
+https://api.github.com/repos/tensorflow/tensorflow
+https://api.github.com/repos/tensorflow/tensorfur
+https://www.registry.npmjs.org/package/web3
+https://www.registry.npmjs.org/package/truffle
+https://www.registry.npmjs.org/package/hardhat
+https://www.registry.npmjs.org/package/hardhaha
