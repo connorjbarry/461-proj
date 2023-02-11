@@ -92,10 +92,6 @@ impl Commands {
             .expect("failed to execute build process")
     }
 
-    // pub fn fileName(&self) {
-
-    // }
-
 
     /* 
         Function: test
@@ -120,7 +116,7 @@ impl Commands {
 
     /* 
         Function: grade
-        Arguments: None
+        Arguments: urls: Vec<String> - a vector containing the urls passed to the program
         Return: None
 
         Description: This function grades the module and returns the grade to the user
@@ -130,10 +126,9 @@ impl Commands {
             command.grade();
     */
 
-    pub fn grade(&self) {
-        let metrics = Metrics::new();
-        // loop through the urls and grade each one
-        for url in self.urls.as_ref().unwrap() {
+    pub fn grade(&self, urls: Vec<String>) {
+        let mut metrics = Metrics::new();
+        for url in urls.iter() {
             metrics.get_metrics(url);
         }
     }
