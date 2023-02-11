@@ -2,6 +2,7 @@ use std::fs;
 use std::io::{prelude::*, Error};
 use serde::Deserialize;
 
+static ABSOLUTE_JSON_PATH: &'static str = "temp_metric.json";
 #[derive(Deserialize, Debug)]
 pub struct Metrics {
     pub ramp_up:f64,
@@ -25,6 +26,7 @@ impl Metrics {
         }
     }
 
+
     /* 
         Function: get_ramp_up
         Arguments: moudule_url - the name of the module the metric is graded for
@@ -41,7 +43,7 @@ impl Metrics {
     pub fn get_ramp_up(&mut self, _module_url: &str) -> Result<(), Error> {
         //call python script for ramp up
         let mut contents = String::new();
-        let mut file = fs::File::open("temp_metric.json").expect("Unable to open file");
+        let mut file = fs::File::open(ABSOLUTE_JSON_PATH).expect("Unable to open file");
         file.read_to_string(&mut contents).expect("Unable to read file");
 
         let json: serde_json::Value = serde_json::from_str(&contents)?;
@@ -74,7 +76,7 @@ impl Metrics {
 
     pub fn get_correctness(&mut self,  _module_url: &str) -> Result<(), Error> {
         let mut contents = String::new();
-        let mut file = fs::File::open("temp_metric.json").expect("Unable to open file");
+        let mut file = fs::File::open(ABSOLUTE_JSON_PATH).expect("Unable to open file");
         file.read_to_string(&mut contents).expect("Unable to read file");
 
         let json: serde_json::Value = serde_json::from_str(&contents)?;
@@ -105,7 +107,7 @@ impl Metrics {
     
     pub fn get_bus_factor(&mut self,  _module_url: &str) -> Result<(), Error> {
         let mut contents = String::new();
-        let mut file = fs::File::open("temp_metric.json").expect("Unable to open file");
+        let mut file = fs::File::open(ABSOLUTE_JSON_PATH).expect("Unable to open file");
         file.read_to_string(&mut contents).expect("Unable to read file");
 
         let json: serde_json::Value = serde_json::from_str(&contents)?;
@@ -136,7 +138,7 @@ impl Metrics {
 
     pub fn get_responsiveness(&mut self,  _module_url: &str) -> Result<(), Error> {
         let mut contents = String::new();
-        let mut file = fs::File::open("temp_metric.json").expect("Unable to open file");
+        let mut file = fs::File::open(ABSOLUTE_JSON_PATH).expect("Unable to open file");
         file.read_to_string(&mut contents).expect("Unable to read file");
 
         let json: serde_json::Value = serde_json::from_str(&contents)?;
@@ -168,7 +170,7 @@ impl Metrics {
 
     pub fn get_license(&mut self,  _module_url: &str) -> Result<(), Error> {
         let mut contents = String::new();
-        let mut file = fs::File::open("temp_metric.json").expect("Unable to open file");
+        let mut file = fs::File::open(ABSOLUTE_JSON_PATH).expect("Unable to open file");
         file.read_to_string(&mut contents).expect("Unable to read file");
 
         let json: serde_json::Value = serde_json::from_str(&contents)?;
@@ -204,7 +206,7 @@ impl Metrics {
         self.get_license(module_url).expect("Unable to get license");
 
         
-        self.total = (self.ramp_up + self.correctness + self.bus_factor + self.responsiveness + self.license) / 5.0;
+        self.total = ((self.ramp_up * 0.25) + (self.correctness * 0.2) + (self.bus_factor * 0.15) + (self.responsiveness * 0.4)) * self.license;
     }  
 
     /* 
@@ -221,7 +223,7 @@ impl Metrics {
 
     pub fn get_metrics(&mut self, module_url: &str, api_url: &str) {
         self.get_total(module_url, api_url);
-        println!("{{\"URL\": \"{}\", \"NET_SCORE\": {:.3}, \"RAMP_UP_SCORE\": {}, \"CORRECTNESS_SCORE\": {}, \"BUS_FACTOR_SCORE\": {}, \"RESPONSIVE_MAINTAINER_SCORE\": {}, \"LICENSE_SCORE\": {}}}",
+        println!("{{\"URL\": \"{}\", \"NET_SCORE\": {:.2}, \"RAMP_UP_SCORE\": {}, \"CORRECTNESS_SCORE\": {}, \"BUS_FACTOR_SCORE\": {}, \"RESPONSIVE_MAINTAINER_SCORE\": {}, \"LICENSE_SCORE\": {}}}",
         module_url, self.total, self.ramp_up, self.correctness, self.bus_factor, self.responsiveness, self.license
         );
     }
