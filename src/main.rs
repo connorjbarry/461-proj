@@ -3,6 +3,7 @@ use inputs::Args;
 use inputs::commands::Commands;
 use std::env;
 
+
 fn main() {
     // initialize a list of arguments passed to the program in the case that the user does not have clap installed
     let initial_args: Vec<String> = env::args().collect();
@@ -18,7 +19,6 @@ fn main() {
         if the user has passed the install command, the program will install the clap crate and any other dependencies    
     */
     else if initial_args.len() == 3 && initial_args[2] == "install" {
-        println!("This is the install command");
         let mut command = Commands::new();
         command.install = Some(true);
         command.install();
