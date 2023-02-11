@@ -33,7 +33,3 @@ fn main() {
     }
     
 }
-
-/* 
-    Unit tests for the program
-*/
