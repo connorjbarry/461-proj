@@ -1,6 +1,6 @@
 import requests
 import json
-import sys
+from sys import argv
 import numpy as np
 
 def import_package_github(url, token):
@@ -82,52 +82,38 @@ def calc_license_npmjs(data, url):
 	else:
 		return 0
 
-def score(sys.argv):
+def score(url):
 	license_score = 0
 	GH_token = "REDACTED" # fill in with corrent token
 	# scores the URLs for license compatibility
-	if len(sys.argv) == 2:
-		url = sys.argv[0]
-		if "github" in url:
-			package_data = import_package_github(url, GH_token)
-			# will run if data is imported correctly
-			if package_data != -1:
-				license_score = calc_license_github(package_data, url)
+	if "github" in url:
+		package_data = import_package_github(url, GH_token)
+		# will run if data is imported correctly
+		if package_data != -1:
+			license_score = calc_license_github(package_data, url)
 	
-		elif "npmjs" in url:
-			package_data = import_package_npmjs(url)
-			# will run if data is imported correctly
-			if package_data != -1:
-				license_score = calc_license_npmjs(package_data, url)
+	elif "npmjs" in url:
+		package_data = import_package_npmjs(url)
+		# will run if data is imported correctly
+		if package_data != -1:
+			license_score = calc_license_npmjs(package_data, url)
 	
-		# write data to output file
-		try:
-			with open("metrics.json", "r") as f:
-				data = json.load(f)
-		except:
-			data = {}
-		if url in data:
-			data[url]["License"] = license_score
-		else:
-			data[url] = {"License": license_score}
+	# write data to output file
+	try:
+		with open("metrics.json", "r") as f:
+			data = json.load(f)
+	except:
+		data = {}
+	if url in data:
+		data[url]["License"] = license_score
+	else:
+		data[url] = {"License": license_score}
 
-		# Write the updated JSON data back to the file
-		with open("metrics.json", "w") as f:
-			json.dump(data, f, indent=4)
+	# Write the updated JSON data back to the file
+	with open("metrics.json", "w") as f:
+		json.dump(data, f, indent=4)
 	
 	return
-''''
+
 if __name__ == "__main__":
-	
-	# URL examples
-	url1 = f'https://api.github.com/repos/cloudinary/cloudinary_npm'
-	url2 = f'https://registry.npmjs.com/express'
-	url3 = f'https://api.github.com/repos/nullivex/nodist'
-	url4 = f'https://api.github.com/repos/lodash/lodash'
-	url5 = f'https://registry.npmjs.com/browserify'
-	print(score(url1))
-	print(score(url2))
-	print(score(url3))
-	print(score(url4))
-	print(score(url5))
-'''
+    score(str(argv[1]))
