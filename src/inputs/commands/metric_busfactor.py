@@ -47,13 +47,19 @@ def import_package_github(url, token):
 		return 0
 
 def fit_score(num):
-	score = (1 - (np.log10(num))/4)
+	# scored on a log function that has a max of 1, and slowly decreases
+	if num > 0:
+		score = (1 - (np.log10(num))/4)
+	else:
+		score = 0
+	if score < 0:
+		score = 0
 	return score
 
 def score(url):
 	dependency_score = 0
 	num_dependencies = 0
-	GH_token = "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" # fill in with corrent token
+	GH_token = "REDACTED" # fill in with corrent token
 	# scores the URLs for license compatibility
 	if "github" in url:
 		num_dependencies = import_package_github(url, GH_token)
