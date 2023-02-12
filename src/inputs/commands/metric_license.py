@@ -1,6 +1,6 @@
 import requests
 import json
-from sys import argv
+import sys
 import numpy as np
 from dotenv import load_dotenv
 import os

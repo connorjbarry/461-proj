@@ -3,30 +3,35 @@
         "RampUp": 0.73,
         "License": 0,
         "Correctness": 0.66,
-        "ResponsiveMaintainer": 0.68
+        "ResponsiveMaintainer": 0.68,
+        "BusFactor": 0.62
     },
     "https://www.npmjs.com/package/express": {
         "RampUp": 1.0,
         "License": 1,
         "Correctness": 0.94,
-        "ResponsiveMaintainer": 0.75
+        "ResponsiveMaintainer": 0.75,
+        "BusFactor": 0.58
     },
     "https://github.com/nullivex/nodist": {
         "RampUp": 0.83,
         "License": 1,
         "Correctness": 0,
-        "ResponsiveMaintainer": 0.35
+        "ResponsiveMaintainer": 0.35,
+        "BusFactor": 0.72
     },
     "https://github.com/lodash/lodash": {
         "RampUp": 0.49,
         "License": 0,
         "Correctness": 0.63,
-        "ResponsiveMaintainer": 0.0
+        "ResponsiveMaintainer": 0.0,
+        "BusFactor": 0.83
     },
     "https://www.npmjs.com/package/browserify": {
         "RampUp": 0.83,
         "License": 1,
         "Correctness": 0,
-        "ResponsiveMaintainer": 0.07
+        "ResponsiveMaintainer": 0.07,
+        "BusFactor": 0.55
     }
 }
