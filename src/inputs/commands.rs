@@ -1,4 +1,4 @@
-use std::process::{Command, Child};
+use std::process::{Command};
 mod metrics;
 use metrics::Metrics;
 
@@ -58,8 +58,10 @@ impl Commands {
     */
 
     pub fn install(&self)  {
-        Command::new("cargo")
+    /*     Command::new("cargo")
             .arg("add")
+            .arg("--version")
+            .arg("3.2.17")
             .arg("clap")
             .arg("--features")
             .arg("clap/derive")
@@ -69,8 +71,17 @@ impl Commands {
             .arg("serde/derive")
             .arg("serde_json")
             .arg("regex")
-            .spawn()
+            .output()
+            .expect("failed to execute install process"); */
+        Command::new("pip")
+            .arg("install")
+            // .arg("requests")
+            .arg("python-dotenv")
+            // .arg("json")
+            .output()
             .expect("failed to execute install process");
+
+            println!("6 dependencies installed...")
     }
 
     /* 
@@ -85,12 +96,12 @@ impl Commands {
             command.build();
     */
 
-    pub fn build(&self) -> Child {
+    pub fn build(&self) {
         // build 
         Command::new("cargo")
             .arg("build")
-            .spawn()
-            .expect("failed to execute build process")
+            .output()
+            .expect("failed to execute build process");
     }
 
 
@@ -107,11 +118,11 @@ impl Commands {
     */
 
 
-    pub fn test(&self) -> Child {
+    pub fn test(&self) {
         Command::new("cargo")
             .arg("test")
-            .spawn()
-            .expect("failed to execute test process")
+            .output()
+            .expect("failed to execute test process");
 
     }
 

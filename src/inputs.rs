@@ -12,10 +12,10 @@ use commands::Commands;
 */
 
 #[derive(Parser, Debug)]
-#[command(author,version,about,long_about=None)]
+#[clap(author,version,about,long_about=None)]
 pub struct Args {
     /// The command to execute
-    #[arg(short, long)]
+    #[clap(short, long, value_parser)]
     pub command: String,
 }
 
@@ -99,11 +99,23 @@ impl Args {
             let mut s = String::from(url);
             if re.is_match(url) {
                 if url.contains("github.com") {
-                    s = s.replace("github.com", "api.github.com/repos")
+                    if url.contains("www.") {
+                        s = s.replace("www.github.com", "api.github.com/repos")
+                    }
+                    else {
+                        s = s.replace("github.com", "api.github.com/repos")
+                    }
                 }
                 
                 if url.contains("npmjs.com") {
-                    s = s.replace("npmjs.com", "registry.npmjs.org")
+                    if url.contains("www.") {
+                        s = s.replace("www.npmjs.com", "registry.npmjs.org");
+                        s = s.replace("package/", "");
+                    }
+                    else {
+                        s = s.replace("npmjs.com", "registry.npmjs.org");
+                        s = s.replace("package/", "");
+                    }
                 }
 
                 temp_urls.push(s.to_string());

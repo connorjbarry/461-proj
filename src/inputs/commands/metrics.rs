@@ -1,8 +1,9 @@
 use std::fs;
 use std::io::{prelude::*, Error};
+use std::process::Command;
 use serde::Deserialize;
 
-static ABSOLUTE_JSON_PATH: &'static str = "temp_metric.json";
+static ABSOLUTE_JSON_PATH: &'static str = "src/inputs/commands/metrics.json";
 #[derive(Deserialize, Debug)]
 pub struct Metrics {
     pub ramp_up:f64,
@@ -114,10 +115,12 @@ impl Metrics {
 
         for (key, value) in json.as_object().unwrap().iter() {
             if key == _module_url {
-                let bus_factor = value["BusFactor"].as_f64().unwrap();
-                self.bus_factor = bus_factor;
+                // let bus_factor = value["BusFactor"].as_f64().unwrap();
+                // self.bus_factor = bus_factor;
             }
         }
+
+        self.bus_factor = 0.0;
 
         Ok(())
         }
@@ -150,7 +153,7 @@ impl Metrics {
             }
         }
 
-        Ok(()) 
+      Ok(()) 
        }
 
 
@@ -198,7 +201,8 @@ impl Metrics {
             metrics.get_total();
     */
 
-    pub fn get_total(&mut self,  module_url: &str, _api_url: &str) {
+    pub fn get_total(&mut self,  module_url: &str, api_url: &str) {
+        self.call_scripts(module_url, api_url);
         self.get_ramp_up(module_url).expect("Unable to get ramp up");
         self.get_correctness(module_url).expect("Unable to get correctness");
         self.get_bus_factor(module_url).expect("Unable to get bus factor");
@@ -226,5 +230,41 @@ impl Metrics {
         println!("{{\"URL\": \"{}\", \"NET_SCORE\": {:.2}, \"RAMP_UP_SCORE\": {}, \"CORRECTNESS_SCORE\": {}, \"BUS_FACTOR_SCORE\": {}, \"RESPONSIVE_MAINTAINER_SCORE\": {}, \"LICENSE_SCORE\": {}}}",
         module_url, self.total, self.ramp_up, self.correctness, self.bus_factor, self.responsiveness, self.license
         );
+    }
+    
+    /* 
+        Function: call_scripts
+        Arguments: module_url - the name of the module the metric is graded for
+        Return: None
+
+        Description: This function runs all the scripts and returns the metric to a json file for the module
+
+        Example: 
+            let metrics = Metrics::new();
+            metrics.call_scripts();
+    */
+
+    fn call_scripts(&mut self, url: &str, api_url: &str) {
+        Command::new("python3")
+            .arg("src/inputs/commands/rampup.py")
+            .arg(url)
+            .output()
+            .expect("failed to execute rampup process");
+        Command::new("python3")
+            .arg("src/inputs/commands/metric_license.py")
+            .arg(api_url)
+            .arg(url)
+            .spawn()
+            .expect("failed to execute license process");
+        Command::new("python3")
+            .arg("src/inputs/commands/correctness.py")
+            .arg(url)
+            .output()
+            .expect("failed to execute correctness process");
+        Command::new("python3")
+            .arg("src/inputs/commands/responsive.py")
+            .arg(url)
+            .output()
+            .expect("failed to execute responsive process");
     }
 }
