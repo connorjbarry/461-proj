@@ -51,6 +51,10 @@ impl Metrics {
 
         for (key, value) in json.as_object().unwrap().iter() {
             if key == _module_url {
+                if value["RampUp"].is_null() {
+                    self.ramp_up = -1.0;
+                    return Ok(());
+                }
                 let ramp_up = value["RampUp"].as_f64().unwrap();
                 self.ramp_up = ramp_up;
             }
@@ -84,6 +88,10 @@ impl Metrics {
 
         for (key, value) in json.as_object().unwrap().iter() {
             if key == _module_url {
+                if value["Correctness"].is_null() {
+                    self.correctness = -1.0;
+                    return Ok(());
+                }
                 let correctness = value["Correctness"].as_f64().unwrap();
                 self.correctness = correctness;
             }
@@ -115,6 +123,10 @@ impl Metrics {
 
         for (key, value) in json.as_object().unwrap().iter() {
             if key == _module_url {
+                if value["BusFactor"].is_null() {
+                    self.bus_factor = -1.0;
+                    return Ok(());
+                }
                 let bus_factor = value["BusFactor"].as_f64().unwrap();
                 self.bus_factor = bus_factor;
             }
@@ -146,6 +158,10 @@ impl Metrics {
 
         for (key, value) in json.as_object().unwrap().iter() {
             if key == _module_url {
+                if value["ResponsiveMaintainer"].is_null() {
+                    self.responsiveness = -1.0;
+                    return Ok(());
+                }
                 let responsiveness = value["ResponsiveMaintainer"].as_f64().unwrap();
                 self.responsiveness = responsiveness;
             }
@@ -178,6 +194,10 @@ impl Metrics {
 
         for (key, value) in json.as_object().unwrap().iter() {
             if key == _module_url {
+                if value["License"].is_null() {
+                    self.license = -1.0;
+                    return Ok(());
+                }
                 let license = value["License"].as_f64().unwrap();
                 self.license = license;
             }
@@ -252,7 +272,7 @@ impl Metrics {
             .arg("src/inputs/commands/metric_license.py")
             .arg(api_url)
             .arg(url)
-            .spawn()
+            .output()
             .expect("failed to execute license process");
         Command::new("python3")
             .arg("src/inputs/commands/correctness.py")
