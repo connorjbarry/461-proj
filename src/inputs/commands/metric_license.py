@@ -7,6 +7,8 @@ import os
 
 load_dotenv()
 
+GH_token = os.getenv("GITHUB_TOKEN")
+
 
 def import_package_github(url, token):
     try:
@@ -92,9 +94,8 @@ def calc_license_npmjs(data, url):
         return 0
 
 
-def score(url):
+def score(url, url_for_json):
     license_score = 0
-    GH_token = os.getenv("GITHUB_TOKEN")  # fill in with corrent token
     # scores the URLs for license compatibility
     url = url
     if "github" in url:
@@ -115,17 +116,18 @@ def score(url):
             data = json.load(f)
     except:
         data = {}
-    if url in data:
-        data[url]["License"] = license_score
+    if url_for_json in data:
+        data[url_for_json]["License"] = license_score
     else:
-        data[url] = {"License": license_score}
+        data[url_for_json] = {"License": license_score}
 
     # Write the updated JSON data back to the file
     with open("src/inputs/commands/metrics.json", "w") as f:
         json.dump(data, f, indent=4)
-
+    print(license_score)
     return
 
 
 if __name__ == "__main__":
-    score(sys.argv[1])
+    print(sys.argv[1], sys.argv[2])
+    score(sys.argv[1], sys.argv[2])

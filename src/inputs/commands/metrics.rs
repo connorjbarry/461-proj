@@ -201,8 +201,8 @@ impl Metrics {
             metrics.get_total();
     */
 
-    pub fn get_total(&mut self,  module_url: &str, _api_url: &str) {
-        self.call_scripts(module_url);
+    pub fn get_total(&mut self,  module_url: &str, api_url: &str) {
+        self.call_scripts(module_url, api_url);
         self.get_ramp_up(module_url).expect("Unable to get ramp up");
         self.get_correctness(module_url).expect("Unable to get correctness");
         self.get_bus_factor(module_url).expect("Unable to get bus factor");
@@ -244,7 +244,7 @@ impl Metrics {
             metrics.call_scripts();
     */
 
-    fn call_scripts(&mut self, url: &str) {
+    fn call_scripts(&mut self, url: &str, api_url: &str) {
         Command::new("python3")
             .arg("src/inputs/commands/rampup.py")
             .arg(url)
@@ -252,8 +252,9 @@ impl Metrics {
             .expect("failed to execute rampup process");
         Command::new("python3")
             .arg("src/inputs/commands/metric_license.py")
+            .arg(api_url)
             .arg(url)
-            .output()
+            .spawn()
             .expect("failed to execute license process");
         Command::new("python3")
             .arg("src/inputs/commands/correctness.py")
