@@ -124,10 +124,8 @@ def score(url, url_for_json):
     # Write the updated JSON data back to the file
     with open("src/inputs/commands/metrics.json", "w") as f:
         json.dump(data, f, indent=4)
-    print(license_score)
     return
 
 
 if __name__ == "__main__":
-    print(sys.argv[1], sys.argv[2])
     score(sys.argv[1], sys.argv[2])
