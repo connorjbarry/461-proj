@@ -57,7 +57,7 @@ impl Commands {
             command.install();
     */
 
-    pub fn install(&self) -> Child {
+    pub fn install(&self)  {
         Command::new("cargo")
             .arg("add")
             .arg("clap")
@@ -65,11 +65,12 @@ impl Commands {
             .arg("clap/derive")
             .arg("reqwest")
             .arg("serde")
+            .arg("--features")
+            .arg("serde/derive")
             .arg("serde_json")
-            .arg("serde_derive")
             .arg("regex")
             .spawn()
-            .expect("failed to execute install process")
+            .expect("failed to execute install process");
     }
 
     /* 
@@ -128,8 +129,8 @@ impl Commands {
 
     pub fn grade(&self, urls: Vec<String>) {
         let mut metrics = Metrics::new();
-        for url in urls.iter() {
-            metrics.get_metrics(url);
+        for (i, url) in self.urls.as_ref().unwrap().iter().enumerate() {
+            metrics.get_metrics(&urls[i], url);
         }
     }
 }

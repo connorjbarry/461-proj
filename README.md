@@ -24,7 +24,7 @@ The service will be prompted with a list of npm modules to grade. The service wi
 
 These criteria will be graded on a scale of 0-1 with 1 being the best score. The total score will be calculated by an equation determined from the importance of each metric to the ACME Corpm and seen below:
 
-# Getting Started
+## Getting Started
 
 The command line interface supports the following commands:
 
@@ -33,7 +33,7 @@ The command line interface supports the following commands:
 - `test` - Runs the test suite
 - `url-file` - This is the path to a file containing a list of URLs to grade (one per line)
 
-#### To run these commands, input the following into the command line:
+### To run these commands, input the following into the command line
 
 ```bash
 ./run <command>

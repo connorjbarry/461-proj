@@ -1,3 +1,9 @@
+use std::fs;
+use std::io::{prelude::*, Error};
+use serde::Deserialize;
+
+static ABSOLUTE_JSON_PATH: &'static str = "temp_metric.json";
+#[derive(Deserialize, Debug)]
 pub struct Metrics {
     pub ramp_up:f64,
     pub correctness:f64,
@@ -7,17 +13,19 @@ pub struct Metrics {
     pub total:f64,
 }
 
+
 impl Metrics {
     pub fn new() -> Self {
         Metrics {
-            ramp_up: 0.0,
-            correctness: 0.0,
-            bus_factor: 0.0,
-            responsiveness: 0.0,
-            license: 0.0,
-            total: 0.0,
+            ramp_up: -1.0,
+            correctness: -1.0,
+            bus_factor: -1.0,
+            responsiveness: -1.0,
+            license: -1.0,
+            total: -1.0,
         }
     }
+
 
     /* 
         Function: get_ramp_up
@@ -32,8 +40,25 @@ impl Metrics {
             metrics.get_ramp_up();
     */
 
-    pub fn get_ramp_up(&mut self, module_url: &str) /* -> f64 */ {
-        self.ramp_up = 0.5;
+    pub fn get_ramp_up(&mut self, _module_url: &str) -> Result<(), Error> {
+        //call python script for ramp up
+        let mut contents = String::new();
+        let mut file = fs::File::open(ABSOLUTE_JSON_PATH).expect("Unable to open file");
+        file.read_to_string(&mut contents).expect("Unable to read file");
+
+        let json: serde_json::Value = serde_json::from_str(&contents)?;
+
+        for (key, value) in json.as_object().unwrap().iter() {
+            if key == _module_url {
+                let ramp_up = value["RampUp"].as_f64().unwrap();
+                self.ramp_up = ramp_up;
+            }
+        }
+
+        Ok(())
+
+
+        // delete the folder created by the clone
     }
 
     /* 
@@ -49,8 +74,21 @@ impl Metrics {
             metrics.get_correctness();
     */
 
-    pub fn get_correctness(&mut self,  module_url: &str) /* -> f64 */ {
-        self.correctness = 0.6;
+    pub fn get_correctness(&mut self,  _module_url: &str) -> Result<(), Error> {
+        let mut contents = String::new();
+        let mut file = fs::File::open(ABSOLUTE_JSON_PATH).expect("Unable to open file");
+        file.read_to_string(&mut contents).expect("Unable to read file");
+
+        let json: serde_json::Value = serde_json::from_str(&contents)?;
+
+        for (key, value) in json.as_object().unwrap().iter() {
+            if key == _module_url {
+                let correctness = value["Correctness"].as_f64().unwrap();
+                self.correctness = correctness;
+            }
+        }
+
+        Ok(())
     }
 
 
@@ -66,10 +104,23 @@ impl Metrics {
             let metrics = Metrics::new();
             metrics.get_bus_factor();
     */
+    
+    pub fn get_bus_factor(&mut self,  _module_url: &str) -> Result<(), Error> {
+        let mut contents = String::new();
+        let mut file = fs::File::open(ABSOLUTE_JSON_PATH).expect("Unable to open file");
+        file.read_to_string(&mut contents).expect("Unable to read file");
 
-    pub fn get_bus_factor(&mut self,  module_url: &str) /* -> f64 */ {
-        self.bus_factor = 0.3;
-    }
+        let json: serde_json::Value = serde_json::from_str(&contents)?;
+
+        for (key, value) in json.as_object().unwrap().iter() {
+            if key == _module_url {
+                let bus_factor = value["BusFactor"].as_f64().unwrap();
+                self.bus_factor = bus_factor;
+            }
+        }
+
+        Ok(())
+        }
 
 
     /* 
@@ -85,9 +136,22 @@ impl Metrics {
             metrics.get_responsiveness();
     */
 
-    pub fn get_responsiveness(&mut self,  module_url: &str) /* -> f64 */ {
-        self.responsiveness = 0.7;
-    }
+    pub fn get_responsiveness(&mut self,  _module_url: &str) -> Result<(), Error> {
+        let mut contents = String::new();
+        let mut file = fs::File::open(ABSOLUTE_JSON_PATH).expect("Unable to open file");
+        file.read_to_string(&mut contents).expect("Unable to read file");
+
+        let json: serde_json::Value = serde_json::from_str(&contents)?;
+
+        for (key, value) in json.as_object().unwrap().iter() {
+            if key == _module_url {
+                let responsiveness = value["ResponsiveMaintainer"].as_f64().unwrap();
+                self.responsiveness = responsiveness;
+            }
+        }
+
+        Ok(()) 
+       }
 
 
     /* 
@@ -104,9 +168,22 @@ impl Metrics {
     */
 
 
-    pub fn get_license(&mut self,  module_url: &str) /* -> f64 */ {
-        self.license =  1.0;
-    }
+    pub fn get_license(&mut self,  _module_url: &str) -> Result<(), Error> {
+        let mut contents = String::new();
+        let mut file = fs::File::open(ABSOLUTE_JSON_PATH).expect("Unable to open file");
+        file.read_to_string(&mut contents).expect("Unable to read file");
+
+        let json: serde_json::Value = serde_json::from_str(&contents)?;
+
+        for (key, value) in json.as_object().unwrap().iter() {
+            if key == _module_url {
+                let license = value["License"].as_f64().unwrap();
+                self.license = license;
+            }
+        }
+
+        Ok(()) 
+       }
 
 
     /* 
@@ -121,13 +198,15 @@ impl Metrics {
             metrics.get_total();
     */
 
-    pub fn get_total(&mut self,  module_url: &str) /* -> f64 */ {
-        self.get_ramp_up(module_url);
-        self.get_correctness(module_url);
-        self.get_bus_factor(module_url);
-        self.get_responsiveness(module_url);
-        self.get_license(module_url);
-        self.total = (self.ramp_up + self.correctness + self.bus_factor + self.responsiveness + self.license) / 5.0;
+    pub fn get_total(&mut self,  module_url: &str, _api_url: &str) {
+        self.get_ramp_up(module_url).expect("Unable to get ramp up");
+        self.get_correctness(module_url).expect("Unable to get correctness");
+        self.get_bus_factor(module_url).expect("Unable to get bus factor");
+        self.get_responsiveness(module_url).expect("Unable to get responsiveness");
+        self.get_license(module_url).expect("Unable to get license");
+
+        
+        self.total = ((self.ramp_up * 0.25) + (self.correctness * 0.2) + (self.bus_factor * 0.15) + (self.responsiveness * 0.4)) * self.license;
     }  
 
     /* 
@@ -142,9 +221,9 @@ impl Metrics {
             metrics.get_metrics();
     */
 
-    pub fn get_metrics(&mut self, module_url: &str) {
-        self.get_total(module_url);
-        println!("{{\"URL\": \"{}\", \"NET_SCORE\": {}, \"RAMP_UP_SCORE\": {}, \"CORRECTNESS_SCORE\": {}, \"BUS_FACTOR_SCORE\": {}, \"RESPONSIVE_MAINTAINER_SCORE\": {}, \"LICENSE_SCORE\": {}}}",
+    pub fn get_metrics(&mut self, module_url: &str, api_url: &str) {
+        self.get_total(module_url, api_url);
+        println!("{{\"URL\": \"{}\", \"NET_SCORE\": {:.2}, \"RAMP_UP_SCORE\": {}, \"CORRECTNESS_SCORE\": {}, \"BUS_FACTOR_SCORE\": {}, \"RESPONSIVE_MAINTAINER_SCORE\": {}, \"LICENSE_SCORE\": {}}}",
         module_url, self.total, self.ramp_up, self.correctness, self.bus_factor, self.responsiveness, self.license
         );
     }
