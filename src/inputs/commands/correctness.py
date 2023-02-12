@@ -2,15 +2,22 @@ from datetime import datetime
 from sys import argv
 import requests
 import json
+import os
+from dotenv import load_dotenv
 
-GITHUB_TOKEN = ""
+load_dotenv()
+
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+
 
 def getCorrectnessScore(link):
     if "npmjs.com" in link:
-        npm_reg_link = "https://registry." + link.split("www.")[1].replace("/package",'')
+        npm_reg_link = "https://registry." + \
+            link.split("www.")[1].replace("/package", '')
         response = requests.get(npm_reg_link)
         result = response.json()
-        githubLink = result["repository"]["url"].split("github.com")[1].split("/")
+        githubLink = result["repository"]["url"].split("github.com")[
+            1].split("/")
     elif "github.com" in link:
         githubLink = link.split("github.com")[1].split("/")
     else:
@@ -19,10 +26,10 @@ def getCorrectnessScore(link):
     repo = githubLink[2].replace(".git", "")
 
     repoAPI_link = "https://api.github.com/repos"f"/{owner}/{repo}"
-    response = requests.get(repoAPI_link, headers={'Authorization': "token{}".format(GITHUB_TOKEN)})
+    response = requests.get(repoAPI_link, headers={
+                            'Authorization': "token{}".format(GITHUB_TOKEN)})
     result = response.json()
     forks_count = result["forks"]
-
 
     query = """
     query {
@@ -45,32 +52,34 @@ def getCorrectnessScore(link):
     }
     }
     """
-    query = query.replace("OWNER",owner)
-    query = query.replace("REPO",repo)
+    query = query.replace("OWNER", owner)
+    query = query.replace("REPO", repo)
 
     headers = {
-        "Authorization": "Bearer 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"
+        "Authorization": f"Bearer {GITHUB_TOKEN}"
     }
 
-    response = requests.post("https://api.github.com/graphql", json={ "query": query }, headers=headers)
+    response = requests.post(
+        "https://api.github.com/graphql", json={"query": query}, headers=headers)
     result = response.json()
 
     total_issue_count = result["data"]["repository"]["issues"]["totalCount"]
     firstHundredIssues = result["data"]["repository"]["issues"]["edges"]
     actualIssues = 100
     for issue in firstHundredIssues:
-        labels = [label["node"]["name"] for label in issue["node"]["labels"]["edges"]]
+        labels = [label["node"]["name"]
+                  for label in issue["node"]["labels"]["edges"]]
         if "question" in labels or "awaiting more info" in labels or "discussion" in labels or "awaiting more information" in labels or "discuss" in labels or "invalid" in labels or "duplicate" in labels or "enhancement" in labels:
             actualIssues -= 1
     approx_real_issues = total_issue_count * (actualIssues/100)
-    
+
     percent_with_errors = approx_real_issues/forks_count * 100
     # print(percent_with_errors)
-    issueScore = max(0,1 - percent_with_errors/10)
+    issueScore = max(0, 1 - percent_with_errors/10)
     issueScore = round(issueScore, 2)
 
     try:
-        with open("metrics.json", "r") as f:
+        with open("src/inputs/commands/metrics.json", "r") as f:
             data = json.load(f)
     except:
         data = {}
@@ -82,7 +91,7 @@ def getCorrectnessScore(link):
         data[link] = {"Correctness": issueScore}
 
     # Write the updated JSON data back to the file
-    with open("metrics.json", "w") as f:
+    with open("src/inputs/commands/metrics.json", "w") as f:
         json.dump(data, f, indent=4)
 
 

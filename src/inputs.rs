@@ -12,10 +12,10 @@ use commands::Commands;
 */
 
 #[derive(Parser, Debug)]
-#[command(author,version,about,long_about=None)]
+#[clap(author,version,about,long_about=None)]
 pub struct Args {
     /// The command to execute
-    #[arg(short, long)]
+    #[clap(short, long, value_parser)]
     pub command: String,
 }
 
