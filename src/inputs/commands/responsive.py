@@ -1,6 +1,12 @@
 from datetime import datetime
+<<<<<<< Updated upstream
 import requests
 
+=======
+from sys import argv
+import requests
+import json
+>>>>>>> Stashed changes
 # Constants for time intervals in seconds
 MONTH_IN_SECONDS = 60 * 60 * 24 * 30
 WEEK_IN_SECONDS = 60 * 60 * 24 * 7
@@ -8,11 +14,28 @@ GITHUB_TOKEN = ""  # Replace with actual Github token if available
 
 # Function to calculate the responsive score of a Github repository
 def getResponsiveScore(link):
+<<<<<<< Updated upstream
     # Parse the repository details from the link
     githubLink = link.split("github.com")[1].split("/")
     owner = githubLink[1]
     repo = githubLink[2].replace(".git", "")
 
+=======
+    if "npmjs.com" in link:
+        npm_reg_link = "https://registry." + link.split("www.")[1].replace("/package",'')
+        response = requests.get(npm_reg_link)
+        result = response.json()
+        githubLink = result["repository"]["url"].split("github.com")[1].split("/")
+    elif "github.com" in link:
+        githubLink = link.split("github.com")[1].split("/")
+    else:
+        return "URLs from this organization are not supported currently."
+
+    owner = githubLink[1]
+    repo = githubLink[2].replace(".git", "")
+
+
+>>>>>>> Stashed changes
     # Make a request to the Github API to get the repository details
     repoAPI_link = "https://api.github.com/repos" + "/{}/{}".format(owner, repo)
     response = requests.get(repoAPI_link, headers={'Authorization': "token {}".format(GITHUB_TOKEN)})
@@ -41,6 +64,18 @@ def getResponsiveScore(link):
         prev = datetime.strptime(prev, '%Y-%m-%dT%H:%M:%SZ').timestamp()
         commitTimeSum += prev - current
 
+<<<<<<< Updated upstream
+=======
+    lastCommit = datetime.strptime(lastHundredCommits[0]["commit"]["committer"]["date"], '%Y-%m-%dT%H:%M:%SZ').timestamp()
+    currentTime = datetime.now().timestamp()
+
+    if (currentTime - lastCommit) <= MONTH_IN_SECONDS: 
+        last_commit_ratio = 1
+    else:
+        scaled_ratio = 1 - ((currentTime - lastCommit) - (30 * 24 * 60 * 60)) / (365 * 24 * 60 * 60) # 365 days in a year
+        last_commit_ratio =  max(0, min(1, scaled_ratio))
+
+>>>>>>> Stashed changes
     # Calculate the average time to close an issue
     issueCloseSum = 0
     for issue in issues:
@@ -49,11 +84,17 @@ def getResponsiveScore(link):
         openDate = datetime.strptime(createdAt, '%Y-%m-%dT%H:%M:%SZ').timestamp()
         closeDate = datetime.strptime(closedAt, '%Y-%m-%dT%H:%M:%SZ').timestamp()
         issueCloseSum += closeDate-openDate
+<<<<<<< Updated upstream
 
 
     averageCloseTime = issueCloseSum / numIssues
     commitFrequency = commitTimeSum / numCommits
 
+=======
+ 
+    averageCloseTime = issueCloseSum / numIssues
+    commitFrequency = (commitTimeSum) / numCommits
+>>>>>>> Stashed changes
 
     issueCloseScore = 0
 
@@ -65,6 +106,10 @@ def getResponsiveScore(link):
         commitFrequencyScore = 0.35
     else:
         commitFrequencyScore = 0
+<<<<<<< Updated upstream
+=======
+    commitFrequencyScore *= last_commit_ratio
+>>>>>>> Stashed changes
 
     if averageCloseTime < 0.5*WEEK_IN_SECONDS:
         issueCloseScore = 1
@@ -74,9 +119,37 @@ def getResponsiveScore(link):
         issueCloseScore = 0.35
     else:
         issueCloseScore = 0
+<<<<<<< Updated upstream
     print("Commit Score: " + str(commitFrequencyScore) + "  Average commit time(days):" + str(commitFrequency/60/60/24))
     print("Issue Score: " + str(issueCloseScore) + "  Avg close time(days):" + str(averageCloseTime / 60 / 60 / 24))
     print(0.5 * commitFrequencyScore + 0.5 *issueCloseScore)
 
 if __name__ == "__main__":
     getResponsiveScore('https://github.com/cloudinary/cloudinary_npm')
+=======
+    
+    # Potential outputs to log file
+    # print("Commit Score: " + str(commitFrequencyScore) + "  Average commit time(days):" + str(commitFrequency/60/60/24))
+    # print("Issue Score: " + str(issueCloseScore) + "  Avg close time(days):" + str(averageCloseTime / 60 / 60 / 24))
+    total_score = round(0.5 * commitFrequencyScore + 0.5 *issueCloseScore, 2)
+    # print(total_score)
+    print(total_score)
+    try:
+        with open("metrics.json", "r") as f:
+            data = json.load(f)
+    except:
+        data = {}
+
+    # Update the score of the "ResponsiveMaintainer" metric
+    if link in data:
+        data[link]["ResponsiveMaintainer"] = total_score
+    else:
+        data[link] = {"ResponsiveMaintainer": total_score}
+
+    # Write the updated JSON data back to the file
+    with open("metrics.json", "w") as f:
+        json.dump(data, f, indent=4)
+
+if __name__ == "__main__":
+    getResponsiveScore(str(argv[1]))
+>>>>>>> Stashed changes
