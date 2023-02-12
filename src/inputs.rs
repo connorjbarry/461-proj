@@ -1,4 +1,7 @@
 use clap::Parser;
+use std::fs;
+use regex::Regex;
+
 pub mod commands;
 use commands::Commands;
 
@@ -9,10 +12,10 @@ use commands::Commands;
 */
 
 #[derive(Parser, Debug)]
-#[command(author,version,about,long_about=None)]
+#[clap(author,version,about,long_about=None)]
 pub struct Args {
     /// The command to execute
-    #[arg(short, long)]
+    #[clap(short, long, value_parser)]
     pub command: String,
 }
 
@@ -53,13 +56,79 @@ impl Args {
         let mut command = Commands::new();
         match self.command.as_str() {
             "install" => {
-                println!("This has entered the install parser");
                 command.install = Some(true);
                 command.install();
             },
-            "build" => println!("{}", self.command), 
-            "test" => println!("{}", self.command),
-            _ => println!("{}", self.command),
+            "build" => {
+                command.build = Some(true);
+                command.build();
+            },
+            "test" => {
+                command.test = Some(true);
+                command.test();
+            },  
+            _ => {
+                self.get_file_urls();
+            },
         }
     }
+
+    /* 
+        Function: get_file_urls
+        Arguments: path - the path to the file containing the urls
+        Return: Vec<String> - a vector containing the urls
+
+        Description: This function reads the file containing the urls and returns a vector containing the urls, it also checks if these are valid github/npm urls
+
+        Example: 
+            let args = Args::new();
+            args.parse_commands;
+
+            -- depending on the command being paresed, determines if this function is called. NOT called directly by user
+    */
+
+    fn get_file_urls(&self)  {   
+        let path = self.command.as_str();
+        let contents = fs::read_to_string(path).expect("Something went wrong reading the file");
+        let mut urls: Vec<String> = contents.split_whitespace().map(|s| s.to_string()).collect();
+        let original_urls: Vec<String> = urls.clone();
+        let mut temp_urls: Vec<String> = Vec::new();
+        let re = Regex::new(r"https://(github.com|www.npmjs.com)/[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+").unwrap();
+
+        for url in urls.iter() {
+            let mut s = String::from(url);
+            if re.is_match(url) {
+                if url.contains("github.com") {
+                    if url.contains("www.") {
+                        s = s.replace("www.github.com", "api.github.com/repos")
+                    }
+                    else {
+                        s = s.replace("github.com", "api.github.com/repos")
+                    }
+                }
+                
+                if url.contains("npmjs.com") {
+                    if url.contains("www.") {
+                        s = s.replace("www.npmjs.com", "registry.npmjs.org");
+                        s = s.replace("package/", "");
+                    }
+                    else {
+                        s = s.replace("npmjs.com", "registry.npmjs.org");
+                        s = s.replace("package/", "");
+                    }
+                }
+
+                temp_urls.push(s.to_string());
+            }
+            else {
+                println!("{} is not a valid url", url);
+            }
+        }
+        urls = temp_urls;
+
+        let mut command = Commands::new();
+        command.urls = Some(urls);
+        command.grade(original_urls);
+    }
+
 }

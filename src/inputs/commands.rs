@@ -1,4 +1,4 @@
-use std::process::{Command, Output, Child};
+use std::process::{Command};
 mod metrics;
 use metrics::Metrics;
 
@@ -20,7 +20,7 @@ use metrics::Metrics;
 pub struct Commands {
     pub install: Option<bool>,
     pub build: Option<bool>,
-    pub url: Option<String>,
+    pub urls: Option<Vec<String>>,
     pub test: Option<bool>,
 }
 
@@ -40,7 +40,7 @@ impl Commands {
         Commands {
             install: None,
             build: None,
-            url: None,
+            urls: None,
             test: None,
         }
     }
@@ -57,18 +57,31 @@ impl Commands {
             command.install();
     */
 
-    pub fn install(&self) -> Child {
-        Command::new("cargo")
+    pub fn install(&self)  {
+    /*     Command::new("cargo")
             .arg("add")
+            .arg("--version")
+            .arg("3.2.17")
             .arg("clap")
             .arg("--features")
             .arg("clap/derive")
             .arg("reqwest")
             .arg("serde")
+            .arg("--features")
+            .arg("serde/derive")
             .arg("serde_json")
-            .arg("serde_derive")
-            .spawn()
-            .expect("failed to execute process")
+            .arg("regex")
+            .output()
+            .expect("failed to execute install process"); */
+        Command::new("pip")
+            .arg("install")
+            // .arg("requests")
+            .arg("python-dotenv")
+            // .arg("json")
+            .output()
+            .expect("failed to execute install process");
+
+            println!("6 dependencies installed...")
     }
 
     /* 
@@ -87,12 +100,8 @@ impl Commands {
         // build 
         Command::new("cargo")
             .arg("build")
-            .spawn()
-            .expect("failed to build")
-    }
-
-    pub fn url(&self) -> Option<String> {
-        self.url.clone()
+            .output()
+            .expect("failed to execute build process");
     }
 
 
@@ -112,8 +121,28 @@ impl Commands {
     pub fn test(&self) {
         Command::new("cargo")
             .arg("test")
-            .spawn()
-            .expect("failed to test");
+            .output()
+            .expect("failed to execute test process");
 
     }
+
+    /* 
+        Function: grade
+        Arguments: urls: Vec<String> - a vector containing the urls passed to the program
+        Return: None
+
+        Description: This function grades the module and returns the grade to the user
+
+        Example: 
+            let command = Commands::new();
+            command.grade();
+    */
+
+    pub fn grade(&self, urls: Vec<String>) {
+        let mut metrics = Metrics::new();
+        for (i, url) in self.urls.as_ref().unwrap().iter().enumerate() {
+            metrics.get_metrics(&urls[i], url);
+        }
+    }
 }
+
