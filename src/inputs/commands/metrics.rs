@@ -115,12 +115,10 @@ impl Metrics {
 
         for (key, value) in json.as_object().unwrap().iter() {
             if key == _module_url {
-                // let bus_factor = value["BusFactor"].as_f64().unwrap();
-                // self.bus_factor = bus_factor;
+                let bus_factor = value["BusFactor"].as_f64().unwrap();
+                self.bus_factor = bus_factor;
             }
         }
-
-        self.bus_factor = 0.0;
 
         Ok(())
         }
@@ -266,5 +264,11 @@ impl Metrics {
             .arg(url)
             .output()
             .expect("failed to execute responsive process");
+        Command::new("python3")
+            .arg("src/inputs/commands/metric_busfactor.py")
+            .arg(api_url)
+            .arg(url)
+            .output()
+            .expect("failed to execute bus factor process");
     }
 }
