@@ -14,7 +14,7 @@ This application is based upon a real-world scenario, prompted to us in ECE 3086
 
 ## Service Description
 
-The service will be prompted with a list of npm modules to grade. The service will then grade each module and return the results to the user in tabular format in the console. The grading will be based upon the following criteria:
+The service will be prompted with a list of npm modules to grade. The service will then grade each module and return the results to the user in NDJSON format in the console. The grading will be based upon the following criteria:
 
 - Ramp-up Time -> The ramp up time is mesaured by the readme file and how helpful it is for the user to get started using the module.
 - Correctness -> The correctness of the module is determined by the number of open issues relative to the number of forks on the module. If the module has 100 issues but 10k forks, it may be a good module, but if it has 100 issues and 100 forks, it is likely a bad module with errors being found more commonly by less people.
