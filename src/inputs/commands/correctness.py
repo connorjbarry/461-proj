@@ -2,10 +2,14 @@ from datetime import datetime
 from sys import argv
 import requests
 import json
+from dotenv import load_dotenv
+import os
 
-GITHUB_TOKEN = ""
+load_dotenv()
 
-def getCorrectnessScore(link):
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+
+def getCorrectnessScore(link, outfile):
     if "npmjs.com" in link:
         npm_reg_link = "https://registry." + link.split("www.")[1].replace("/package",'')
         response = requests.get(npm_reg_link)
@@ -21,8 +25,9 @@ def getCorrectnessScore(link):
     repoAPI_link = "https://api.github.com/repos"f"/{owner}/{repo}"
     response = requests.get(repoAPI_link, headers={'Authorization': "token{}".format(GITHUB_TOKEN)})
     result = response.json()
+    for i in result:
+        print(i, result[i])
     forks_count = result["forks"]
-
 
     query = """
     query {
@@ -49,7 +54,7 @@ def getCorrectnessScore(link):
     query = query.replace("REPO",repo)
 
     headers = {
-        "Authorization": "Bearer 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"
+        "Authorization": "Bearer {}".format(GITHUB_TOKEN)
     }
 
     response = requests.post("https://api.github.com/graphql", json={ "query": query }, headers=headers)
@@ -64,13 +69,17 @@ def getCorrectnessScore(link):
             actualIssues -= 1
     approx_real_issues = total_issue_count * (actualIssues/100)
     
+    
+    # accounting for forks_count = 0, setting it to 1 to avoid division by 0
+    if forks_count == 0:
+        forks_count = 1
     percent_with_errors = approx_real_issues/forks_count * 100
     # print(percent_with_errors)
     issueScore = max(0,1 - percent_with_errors/10)
     issueScore = round(issueScore, 2)
 
     try:
-        with open("metrics.json", "r") as f:
+        with open(outfile, "r") as f:
             data = json.load(f)
     except:
         data = {}
@@ -82,9 +91,9 @@ def getCorrectnessScore(link):
         data[link] = {"Correctness": issueScore}
 
     # Write the updated JSON data back to the file
-    with open("metrics.json", "w") as f:
+    with open(outfile, "w") as f:
         json.dump(data, f, indent=4)
 
 
 if __name__ == "__main__":
-    getCorrectnessScore(str(argv[1]))
+    getCorrectnessScore(str(argv[1]), argv[2])
