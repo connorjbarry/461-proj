@@ -5,20 +5,26 @@ import subprocess
 from sys import argv
 import requests
 import re
+from dotenv import load_dotenv
 
-def getRampUpScore(link,jsonfile):
+load_dotenv()
+
+
+def getRampUpScore(link, jsonfile):
     if "npmjs.com" in link:
-        npm_reg_link = "https://registry." + link.split("www.")[1].replace("/package",'')
+        npm_reg_link = "https://registry." + \
+            link.split("www.")[1].replace("/package", '')
         response = requests.get(npm_reg_link)
         result = response.json()
-        githubLink = result["repository"]["url"].split("github.com")[1].split("/")
-        repo_url = "https://github.com" + result["repository"]["url"].split("github.com")[1]
+        repo_url = "https://github.com" + \
+            result["repository"]["url"].split("github.com")[1]
     elif "github.com" in link:
         repo_url = link
     else:
         return "URLs from this organization are not supported currently."
-        
-    repo_dir = (repo_url.split("github.com")[1].split("/"))[2].replace(".git", "")
+
+    repo_dir = (repo_url.split("github.com")[
+                1].split("/"))[2].replace(".git", "")
     # Clone the repository
     subprocess.run(["git", "clone", repo_url, repo_dir], check=True)
     # Change the current working directory to the repository
@@ -37,10 +43,10 @@ def getRampUpScore(link,jsonfile):
             return
     file.close()
     install_section = 0
-    usage_section = 0 
+    usage_section = 0
     examples_section = 0
     docs_section = 0
-    #Search README for helpful sections
+    # Search README for helpful sections
     for line in lines:
         if re.match(r"#+ *install(ation)?", line, re.IGNORECASE):
             install_section = 1
@@ -48,11 +54,11 @@ def getRampUpScore(link,jsonfile):
             usage_section = 1
         if re.match(r"#+ *Doc(umentation)?", line, re.IGNORECASE):
             docs_section = 1
-    
+
     readmeSectionScore = (install_section + usage_section + docs_section) / 3
     readmeLengthScore = 0
     readmeLineCount = len(lines)
-    if readmeLineCount > 150: #decide on better metrics
+    if readmeLineCount > 150:  # decide on better metrics
         readmeLengthScore = 1
     elif readmeLineCount < 150 and readmeLineCount > 125:
         readmeLengthScore = 0.9
@@ -62,19 +68,20 @@ def getRampUpScore(link,jsonfile):
         readmeLengthScore = 0
     else:
         readmeLengthScore = readmeLineCount/100 * 0.8
-    
+
     print("Section Score: "+str(readmeSectionScore))
-    print("Length Score: "+str(readmeLengthScore) + "  Length: " + str(readmeLineCount))
-    total_score = round((readmeLengthScore + readmeSectionScore)/2,2)
-    
+    print("Length Score: "+str(readmeLengthScore) +
+          "  Length: " + str(readmeLineCount))
+    total_score = round((readmeLengthScore + readmeSectionScore)/2, 2)
+
     print("Total score: " + str(total_score))
 
-    
     os.chdir("..")
 
     # Delete the repository directory
     full_dir = os.path.join(os.getcwd(), repo_dir)
     # shutil.rmtree(full_dir)
+    subprocess.run(["rm", "-rf", full_dir], check=True)
 
     try:
         with open(jsonfile, "r") as f:
@@ -91,6 +98,7 @@ def getRampUpScore(link,jsonfile):
     # Write the updated JSON data back to the file
     with open(jsonfile, "w") as f:
         json.dump(data, f, indent=4)
+
 
 if __name__ == "__main__":
     getRampUpScore(str(argv[1]), argv[2])

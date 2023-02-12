@@ -17,14 +17,14 @@ mod tests {
 
         // call python script to parse the url
         Command::new("python3")
-            .arg("src/valid_url.py")
+            .arg("src/inputs/commands/valid_url.py")
             .arg(file1)
             .arg("output1.txt")
             .spawn()
             .expect("failed to execute process");
 
         Command::new("python3")
-            .arg("src/valid_url.py")
+            .arg("src/inputs/commands/valid_url.py")
             .arg(file2)
             .arg("output2.txt")
             .spawn()
@@ -147,7 +147,35 @@ mod tests {
             println!("Testing licenses for {}", url);
             // call python script to check licenses with url as argument
             Command::new("python3")
-                .arg("src/inputs/commands/licenses.py")
+                .arg("src/inputs/commands/metric_license.py")
+                .arg(url.clone())
+                .arg(jsonpath.clone())
+                .output()
+                .expect("failed to execute process");
+        }
+    }
+
+    // #[test]
+    fn test_busfactor() {
+        // call python script to check busfactor
+
+        /* we loop through the list of api url from sample/test_url to test*/
+        let filepath = PathBuf::from("src/testurl.txt");
+
+        // json path
+        let jsonpath = PathBuf::from("src/inputs/commands/metrics.json");
+        
+        // Open the file in read-only mode (ignoring errors).
+        let file = File::open(filepath).unwrap();
+        // Create a buffered reader on the file.
+        let reader = BufReader::new(file);
+
+        for line in reader.lines() {
+            let url = line.unwrap();
+            println!("Testing busfactor for {}", url);
+            // call python script to check licenses with url as argument
+            Command::new("python3")
+                .arg("src/inputs/commands/metric_busfactor.py")
                 .arg(url.clone())
                 .arg(jsonpath.clone())
                 .output()

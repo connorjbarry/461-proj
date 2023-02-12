@@ -34,7 +34,7 @@ def get_api_url(url):
     ## npm url format:
     ## registry.npmjs.org/?/
     if url.__contains__("npmjs.com"):
-        url = url.replace("www.npmjs.com", "registry.npmjs.com")
+        url = url.replace("www.npmjs.com/package", "registry.npmjs.org")
         return url
     
     return None

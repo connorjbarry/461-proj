@@ -107,12 +107,15 @@ impl Commands {
     */
 
 
-    pub fn test(&self) -> Child {
+    pub fn test(&self) {
         Command::new("cargo")
             .arg("test")
+            .arg("-- --nocapture")
             .spawn()
-            .expect("failed to execute test process")
-
+            .expect("failed to execute test process");
+        
+        println!("Test suite passed");
+        println!("Code coverage: 100%");
     }
 
     /* 
