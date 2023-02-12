@@ -76,6 +76,8 @@ def getResponsiveScore(link, outfile):
     # accounting for numIssuses = 0, setting it to 1 to avoid division by 0
     if numIssues == 0:
         numIssues = 1
+    if numCommits == 0:
+        numCommits = 1
     averageCloseTime = issueCloseSum / numIssues
     commitFrequency = (commitTimeSum) / numCommits
 

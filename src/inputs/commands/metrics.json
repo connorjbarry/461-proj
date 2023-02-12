@@ -1,0 +1,24 @@
+{
+    "https://github.com/ethereumbook/ethereumbook": {
+        "License": 0,
+        "ResponsiveMaintainer": 0.0,
+        "RampUp": 0.18
+    },
+    "https://www.npmjs.com/package/web3": {
+        "BusFactor": 0.56,
+        "License": 1,
+        "ResponsiveMaintainer": 0.85,
+        "RampUp": 1.0
+    },
+    "https://www.npmjs.com/package/truffle": {
+        "BusFactor": 0.71,
+        "License": 1,
+        "ResponsiveMaintainer": 0.85,
+        "RampUp": 0.67
+    },
+    "https://www.npmjs.com/package/express": {
+        "License": 1,
+        "BusFactor": 0.58,
+        "ResponsiveMaintainer": 0.75
+    }
+}

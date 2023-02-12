@@ -1,4 +1,4 @@
-https://registry.npmjs.com/package/react
-https://registry.npmjs.com/package/asdfasdc
+https://registry.npmjs.org/react
+https://registry.npmjs.org/asdfasdc
 https://api.github.com/repos/facebook/react-native
 https://api.github.com/repos/facebook/react-nat

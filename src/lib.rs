@@ -155,7 +155,7 @@ mod tests {
         }
     }
 
-    // #[test]
+    #[test]
     fn test_busfactor() {
         // call python script to check busfactor
 
