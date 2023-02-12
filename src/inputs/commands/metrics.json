@@ -2,23 +2,33 @@
     "https://github.com/ethereumbook/ethereumbook": {
         "License": 0,
         "ResponsiveMaintainer": 0.0,
-        "RampUp": 0.18
+        "RampUp": 0.18,
+        "Correctness": 0.89
     },
     "https://www.npmjs.com/package/web3": {
         "BusFactor": 0.56,
         "License": 1,
         "ResponsiveMaintainer": 0.85,
-        "RampUp": 1.0
+        "RampUp": 1.0,
+        "Correctness": 0.69
     },
     "https://www.npmjs.com/package/truffle": {
         "BusFactor": 0.71,
         "License": 1,
         "ResponsiveMaintainer": 0.85,
-        "RampUp": 0.67
+        "RampUp": 0.67,
+        "Correctness": 0
     },
     "https://www.npmjs.com/package/express": {
         "License": 1,
         "BusFactor": 0.58,
-        "ResponsiveMaintainer": 0.75
+        "ResponsiveMaintainer": 0.75,
+        "Correctness": 0.94
+    },
+    "https://www.npmjs.com/package/browserify": {
+        "License": 1,
+        "BusFactor": 0.55,
+        "Correctness": 0,
+        "ResponsiveMaintainer": 0.07
     }
 }

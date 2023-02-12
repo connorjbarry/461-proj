@@ -52,7 +52,6 @@ mod tests {
 
         for line in reader.lines() {
             let url = line.unwrap();
-            println!("Testing responsiveness for {}", url);
             // call python script to check licenses with url as argument
             Command::new("python3")
                 .arg("src/inputs/commands/responsive.py")
@@ -80,7 +79,6 @@ mod tests {
 
         for line in reader.lines() {
             let url = line.unwrap();
-            println!("Testing rampup for {}", url);
             // call python script to check licenses with url as argument
             Command::new("python3")
                 .arg("src/inputs/commands/rampup.py")
@@ -95,7 +93,9 @@ mod tests {
             // remove the cloned repo
             Command::new("rm")
                 .arg("-rf")
-                .arg(repo_name);
+                .arg(repo_name)
+                .spawn()
+                .expect("failed to execute process");
         }
     }
 
@@ -116,7 +116,6 @@ mod tests {
 
         for line in reader.lines() {
             let url = line.unwrap();
-            println!("Testing correctness for {}", url);
             // call python script to check licenses with url as argument
             Command::new("python3")
                 .arg("src/inputs/commands/correctness.py")
@@ -144,7 +143,6 @@ mod tests {
 
         for line in reader.lines() {
             let url = line.unwrap();
-            println!("Testing licenses for {}", url);
             // call python script to check licenses with url as argument
             Command::new("python3")
                 .arg("src/inputs/commands/metric_license.py")
@@ -172,7 +170,6 @@ mod tests {
 
         for line in reader.lines() {
             let url = line.unwrap();
-            println!("Testing busfactor for {}", url);
             // call python script to check licenses with url as argument
             Command::new("python3")
                 .arg("src/inputs/commands/metric_busfactor.py")

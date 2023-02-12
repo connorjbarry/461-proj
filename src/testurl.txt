@@ -12,3 +12,4 @@ https://www.npmjs.com/package/asdfasdc
 https://github.com/facebook/react-nat
 http://this/is/bad/url
 https://www.freecodecamp.org/
+https://www.npmjs.com/package/browserify
