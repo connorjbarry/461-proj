@@ -1,6 +1,6 @@
 import requests
 import json
-import sys
+from sys import argv
 import numpy as np
 from dotenv import load_dotenv
 import os
@@ -62,6 +62,7 @@ def calc_license_github(data, url):
 
 
 def calc_license_npmjs(data, url):
+
     # if text contains the list of approved licenses for LGPL 2.1, score is 1
     # if not, the score is 0
 
