@@ -16,13 +16,17 @@ This application is based upon a real-world scenario, prompted to us in ECE 3086
 
 The service will be prompted with a list of npm modules to grade. The service will then grade each module and return the results to the user in tabular format in the console. The grading will be based upon the following criteria:
 
-- Ramp-up Time
-- Correctness
-- Bus Factor
-- Responsiveness
-- License Compatibility
+- Ramp-up Time -> The ramp up time is mesaured by the readme file and how helpful it is for the user to get started using the module.
+- Correctness -> The correctness of the module is determined by the number of open issues relative to the number of forks on the module. If the module has 100 issues but 10k forks, it may be a good module, but if it has 100 issues and 100 forks, it is likely a bad module with errors being found more commonly by less people.
+- Bus Factor -> The bus factor is determined by the number of dependencies the module uses. If the module uses a ton of dependencies, it is likely that if one of those dependencies is abandoned, the module will be harder to maintain.
+- Responsiveness -> The responsiveness of the module is determine by the time to close an issue as well as the time in between commits. The less time for each, the better the score. The time between commits is scaled by how long ago the most recent commit was.
+- License Compatibility -> The license compatibility is determined by the license of the module. If the license is not compatible with the ACME Corp. the module will be given a score of 0.
 
 These criteria will be graded on a scale of 0-1 with 1 being the best score. The total score will be calculated by an equation determined from the importance of each metric to the ACME Corpm and seen below:
+
+(RAMPUP_SCORE \* 0.25 + CORRECTNESS_SCORE \* 0.2 + BUS_FACTOR_SCORE \* 0.15 + RESPONSIVENESS_SCORE \* 0.4) \* LICENSE_SCORE
+
+This was deemed a good way to weight the metrics based upon the importance of each metric to the ACME Corp. The license score ultimately determines if the module is compatible with the ACME Corp. and is therefore the most important metric, if the license is not compatible the total score will be 0, resulting in an incompatible module.
 
 ## Getting Started
 

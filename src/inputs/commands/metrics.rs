@@ -31,10 +31,10 @@ impl Metrics {
     /* 
         Function: get_ramp_up
         Arguments: moudule_url - the name of the module the metric is graded for
-        Return: f64 - between 0 and 1
+        Return: Result<(), Error>
 
-        Description: This function runs a script and returns the ramp up time metric
-        based on !{}! aspects of the module
+        Description: This function runs a script and sends the ramp up time metric to a 
+        json file based on the readme of the module
 
         Example: 
             let metrics = Metrics::new();
@@ -69,10 +69,10 @@ impl Metrics {
     /* 
         Function: get_correctness
         Arguments: module_url - the name of the module the metric is graded for
-        Return: f64 - between 0 and 1
+        Return: Result<(), Error>
 
-        Description: This function runs a script and returns the correctness metric
-        based on !{}! aspects of the module
+        Description: This function runs a script and sends the correctness metric to a 
+        json file based on issues of the module
 
         Example: 
             let metrics = Metrics::new();
@@ -104,10 +104,10 @@ impl Metrics {
     /* 
         Function: get_bus_factor
         Arguments: module_url - the name of the module the metric is graded for
-        Return: f64 - between 0 and 1
+        Return: Result<(), Error>
 
-        Description: This function runs a script and returns the bus factor metric
-        based on !{}! aspects of the module
+        Description: This function runs a script and sends the bus factor metric to a 
+        json file based on the number of dependecies of the module
 
         Example: 
             let metrics = Metrics::new();
@@ -139,10 +139,10 @@ impl Metrics {
     /* 
         Function: get_responsiveness
         Arguments: module_url - the name of the module the metric is graded for
-        Return: f64 - between 0 and 1
+        Return: Result<(), Error>
 
-        Description: This function runs a script and returns the responsiveness metric
-        based on !{}! aspects of the module
+        Description: This function runs a script and sends the responsiveness metric to a 
+        json file based on commits and issues of the module
 
         Example: 
             let metrics = Metrics::new();
@@ -174,10 +174,10 @@ impl Metrics {
     /* 
         Function: get_license
         Arguments: module_url - the name of the module the metric is graded for
-        Return: f64 - between 0 and 1
+        Return: Result<(), Error>
 
-        Description: This function runs a script and returns the license metric
-        based on !{}! aspects of the module
+        Description: This function runs a script and sends the license metric to a json 
+        file based on the licenses of the module
 
         Example: 
             let metrics = Metrics::new();
@@ -210,7 +210,7 @@ impl Metrics {
     /* 
         Function: get_total
         Arguments: module_url - the name of the module the metric is graded for
-        Return: f64 - between 0 and 1
+        Return: None
 
         Description: This function runs an algorithm considering all the metrics calculated above and returns the total grade
 
