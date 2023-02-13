@@ -38,7 +38,7 @@ def import_package_github(url, token):
         new_url = new_url.replace("github", "githubusercontent")
         response = requests.get(
             new_url, headers={'Authorization': f'token {token}'})
-            
+
         data = response.json()
 
         count = 0
@@ -52,7 +52,7 @@ def import_package_github(url, token):
             count += len(dependencies)
         except:
             pass
-        
+
         return count
     except:
         ### Invalid URL or no bus factor ###
@@ -69,29 +69,33 @@ def fit_score(num):
         score = 0
     return score
 
+
 def score(url, apiurl, jsonfile):
     dependency_score = 0
     num_dependencies = 0  # fill in with corrent token
     # scores the URLs for license compatibility
     if "github" in apiurl:
         num_dependencies = import_package_github(apiurl, GITHUB_TOKEN)
-        dependency_score = fit_score(num_dependencies) if num_dependencies != -1 else -1
+        dependency_score = fit_score(
+            num_dependencies) if num_dependencies != -1 else -1
 
     elif "npmjs" in apiurl:
         new_url = npm_to_github_api(apiurl)
         # will run if url is converted correctly
         if new_url != -1:
             num_dependencies = import_package_github(new_url, GITHUB_TOKEN)
-            dependency_score = fit_score(num_dependencies) if num_dependencies != -1 else -1
+            dependency_score = fit_score(
+                num_dependencies) if num_dependencies != -1 else -1
         ## Handling Invalid URL ##
         else:
-            return 
-    dependency_score = round(dependency_score, 2) if dependency_score != -1 else -1
-    
+            return
+    dependency_score = round(
+        dependency_score, 2) if dependency_score != -1 else -1
+
     ## Handling Invalid URL ##
     if dependency_score == -1:
         return
-    
+
     # write data to output file
     try:
         with open(jsonfile, "r") as f:
@@ -107,6 +111,7 @@ def score(url, apiurl, jsonfile):
     with open(jsonfile, "w") as f:
         json.dump(data, f, indent=4)
 
+    print(dependency_score)
 
     return dependency_score
 
@@ -115,7 +120,7 @@ if __name__ == "__main__":
     # sys args are the url and the json file
     url = sys.argv[1]
     jsonfile = sys.argv[2]
-    
+
     if (vu.valid_url(url)):
         apiurl = vu.get_api_url(url)
         score(url, apiurl, jsonfile)

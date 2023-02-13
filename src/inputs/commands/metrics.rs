@@ -262,7 +262,7 @@ impl Metrics {
             metrics.call_scripts();
     */
 
-    fn call_scripts(&mut self, url: &str, api_url: &str) {
+    fn call_scripts(&mut self, url: &str, _api_url: &str) {
         Command::new("python3")
             .arg("src/inputs/commands/rampup.py")
             .arg(url)
@@ -270,24 +270,26 @@ impl Metrics {
             .expect("failed to execute rampup process");
         Command::new("python3")
             .arg("src/inputs/commands/metric_license.py")
-            .arg(api_url)
             .arg(url)
+            .arg("src/inputs/commands/metrics.json")
             .output()
             .expect("failed to execute license process");
         Command::new("python3")
             .arg("src/inputs/commands/correctness.py")
             .arg(url)
+            .arg("src/inputs/commands/metrics.json")
             .output()
             .expect("failed to execute correctness process");
         Command::new("python3")
             .arg("src/inputs/commands/responsive.py")
             .arg(url)
+            .arg("src/inputs/commands/metrics.json")
             .output()
             .expect("failed to execute responsive process");
         Command::new("python3")
             .arg("src/inputs/commands/metric_busfactor.py")
-            .arg(api_url)
             .arg(url)
+            .arg("src/inputs/commands/metrics.json")
             .output()
             .expect("failed to execute bus factor process");
     }

@@ -34,7 +34,7 @@ def import_package_github(url, token):
             url, headers={'Authorization': f'token {token}'})
         data = response.json()
         license_info = data.get("license", {})
-        
+
         return -1 if license_info == {} else license_info
     except:
         ### Invalid URL ###
@@ -48,7 +48,7 @@ def import_package_npmjs(url):
         data = response.json()
         license_info = data.get("license", "")
         print(license_info)
-        
+
         return -1 if license_info == "" else license_info
     except:
         ### Invalid URL ###
@@ -59,7 +59,6 @@ def calc_license_github(data):
     # if text contains the list of approved licenses for LGPL 2.1, score is 1
     # if not, the score is 0
 
-    
     if data is not None and data.get("spdx_id") in list_of_licenses:
         return 1
     else:
@@ -92,7 +91,7 @@ def score(url, apiurl, jsonfile):
         # will run if data is imported correctly
         if package_data != -1:
             license_score = calc_license_github(package_data)
-        else: 
+        else:
             return
 
     elif "npmjs" in apiurl:
@@ -117,6 +116,8 @@ def score(url, apiurl, jsonfile):
     # Write the updated JSON data back to the file
     with open(jsonfile, "w") as f:
         json.dump(data, f, indent=4)
+
+    print(license_score)
     return
 
 
@@ -124,7 +125,7 @@ if __name__ == "__main__":
     # sys args are the url and the json file
     url = sys.argv[1]
     jsonfile = sys.argv[2]
-    
+
     if (vu.valid_url(url)):
         apiurl = vu.get_api_url(url)
         score(url, apiurl, jsonfile)
