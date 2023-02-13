@@ -1,8 +1,8 @@
 {
     "https://github.com/cloudinary/cloudinary_npm": {
         "RampUp": 0.73,
-        "Correctness": 0.66,
         "License": 0,
+        "Correctness": 0.66,
         "ResponsiveMaintainer": 0.68,
         "BusFactor": 0.62
     },
@@ -19,38 +19,5 @@
         "Correctness": 0,
         "ResponsiveMaintainer": 0.35,
         "BusFactor": 0.72
-    },
-    "https://github.com/lodash/lodash": {
-        "RampUp": 0.49,
-        "License": 0,
-        "Correctness": 0.63,
-        "ResponsiveMaintainer": 0.0,
-        "BusFactor": 0.83
-    },
-    "https://www.npmjs.com/package/browserify": {
-        "RampUp": 0.83,
-        "License": 1,
-        "Correctness": 0,
-        "ResponsiveMaintainer": 0.07,
-        "BusFactor": 0.55
-    },
-    "https://github.com/ethereumbook/ethereumbook": {
-        "Correctness": 0.89,
-        "License": 0,
-        "ResponsiveMaintainer": 0.0,
-        "RampUp": 0.18
-    },
-    "https://www.npmjs.com/package/web3": {
-        "License": 1,
-        "Correctness": 0.69,
-        "BusFactor": 0.56,
-        "ResponsiveMaintainer": 0.85,
-        "RampUp": 1.0
-    },
-    "https://www.npmjs.com/package/truffle": {
-        "License": 1,
-        "BusFactor": 0.71,
-        "Correctness": 0,
-        "ResponsiveMaintainer": 0.85
     }
 }
