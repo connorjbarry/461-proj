@@ -126,4 +126,3 @@ def getResponsiveScore(link, outfile):
 
 if __name__ == "__main__":
     getResponsiveScore(str(argv[1]), argv[2])
-    

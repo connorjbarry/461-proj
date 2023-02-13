@@ -128,5 +128,3 @@ if __name__ == "__main__":
     if (vu.valid_url(url)):
         apiurl = vu.get_api_url(url)
         score(url, apiurl, jsonfile)
-  
-    	

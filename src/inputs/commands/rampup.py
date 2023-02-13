@@ -10,12 +10,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def getRampUpScore(link, jsonfile):
+def getRampUpScore(link):
     if "npmjs.com" in link:
         npm_reg_link = "https://registry." + \
             link.split("www.")[1].replace("/package", '')
         response = requests.get(npm_reg_link)
         result = response.json()
+        githubLink = result["repository"]["url"].split("github.com")[
+            1].split("/")
         repo_url = "https://github.com" + \
             result["repository"]["url"].split("github.com")[1]
     elif "github.com" in link:
@@ -84,7 +86,7 @@ def getRampUpScore(link, jsonfile):
     subprocess.run(["rm", "-rf", full_dir], check=True)
 
     try:
-        with open(jsonfile, "r") as f:
+        with open("src/inputs/commands/metrics.json", "r") as f:
             data = json.load(f)
     except:
         data = {}
@@ -96,9 +98,9 @@ def getRampUpScore(link, jsonfile):
         data[link] = {"RampUp": total_score}
 
     # Write the updated JSON data back to the file
-    with open(jsonfile, "w") as f:
+    with open("src/inputs/commands/metrics.json", "w") as f:
         json.dump(data, f, indent=4)
 
 
 if __name__ == "__main__":
-    getRampUpScore(str(argv[1]), argv[2])
+    getRampUpScore(str(argv[1]))

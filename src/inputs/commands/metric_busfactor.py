@@ -38,6 +38,7 @@ def import_package_github(url, token):
         new_url = new_url.replace("github", "githubusercontent")
         response = requests.get(
             new_url, headers={'Authorization': f'token {token}'})
+            
         data = response.json()
 
         count = 0
@@ -67,7 +68,6 @@ def fit_score(num):
     if score < 0:
         score = 0
     return score
-
 
 def score(url, apiurl, jsonfile):
     dependency_score = 0
@@ -107,8 +107,7 @@ def score(url, apiurl, jsonfile):
     with open(jsonfile, "w") as f:
         json.dump(data, f, indent=4)
 
-    print(dependency_score)
-    print(url, apiurl)
+
     return dependency_score
 
 
