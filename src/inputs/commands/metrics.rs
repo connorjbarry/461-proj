@@ -291,4 +291,4 @@ impl Metrics {
             .output()
             .expect("failed to execute bus factor process");
     }
-}
+  }
