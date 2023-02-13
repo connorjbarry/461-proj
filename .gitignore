@@ -16,3 +16,4 @@ Cargo.lock
 
 .env
 
+__pycache__
